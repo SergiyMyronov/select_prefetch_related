@@ -1,4 +1,4 @@
-from django.db.models import Prefetch
+from django.db.models import Count, Prefetch
 
 from .models import Book, Store
 from .query_debugger import query_debugger
@@ -77,5 +77,13 @@ def store_list_expensive_books_prefetch_related_efficient():
     for store in queryset:
         books = [book.name for book in store.books.all()]
         stores.append({'id': store.id, 'name': store.name, 'books': books})
+
+    return stores
+
+
+@query_debugger
+def stores_per_books():
+
+    stores = Store.objects.annotate(cnt=Count('books'))
 
     return stores
